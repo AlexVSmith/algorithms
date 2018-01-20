@@ -4,7 +4,7 @@ import javax.swing.UIManager;
 
 public class Main {
     public static void main(String[] args) {
-        String release = "2018-01-20 18:45";
+        String release = "2018-01-20 19:45";
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
