@@ -32,7 +32,7 @@ public class MainFrame extends javax.swing.JFrame {
         jComboBox_Type_1_6.addItem("Random filling");
 
         jComboBox_Type_1_6.setSelectedIndex(0);
-        jSpinner_Days.setValue(11);
+        //jSpinner_Days.setValue(11);
         jSpinner_Shift.setValue(3);
         
     }

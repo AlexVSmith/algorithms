@@ -3,6 +3,8 @@ package com.kate.algorithms;
 import com.kate.Helper;
 import com.kate.debug.Debug;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Algoritm_1_6 {
     
@@ -35,6 +37,14 @@ public class Algoritm_1_6 {
             return daysPort;
         }
 
+        public int getPortDay(int port) {
+            for (int d = 0; d < numOfDays; d++) {
+                if (daysPort[d] == port)
+                    return d;
+            }
+            return -1;
+        }
+        
         public int getPortAtDay(int day) {
             return daysPort[day];
         }
@@ -47,6 +57,10 @@ public class Algoritm_1_6 {
                 daysPort[d] = -1; // the ship is in the sea
             }
         }
+        
+//        public Ship copy() {
+//            Ship copy = new Ship();
+//        }
     }
     
     ArrayList<Ship> ships;
@@ -212,9 +226,76 @@ public class Algoritm_1_6 {
                 }
             }
         }
+        //printSchedules();
         solve();
         printSchedules();
         testSolution();
+    }
+
+    private void readPortsDaysShips(HashMap<Integer, HashMap<Integer, Integer>> portsDaysShips) {
+        for (Map.Entry<Integer, HashMap<Integer, Integer>> entry : portsDaysShips.entrySet()) {
+            int port = entry.getKey();
+            Debug.print("rb", "port == " + port);
+            HashMap<Integer, Integer> portDaysShips = entry.getValue();
+            for (int d = 0; d < numOfDays; d++) {
+                Integer ship = portDaysShips.get(d);
+                Debug.print("wb", "day == " + d + "; ship == " + ship );
+            }
+        }
+    }
+    
+    private boolean getStopDayShipPort(HashMap<Integer, HashMap<Integer, Integer>> portsDaysShips) {
+        int stopDay  = numOfDays + 1;
+        int stopPort = -1;
+        int stopShip = -1;
+        for (Map.Entry<Integer, HashMap<Integer, Integer>> entry : portsDaysShips.entrySet()) {
+            int port = entry.getKey();
+            HashMap<Integer, Integer> portDaysShips = entry.getValue();
+            for (int d = 0; d < numOfDays; d++) {
+                int day = numOfDays - d - 1;
+                Integer shipNum = portDaysShips.get(day);
+                if (shipNum == null) {
+                    continue;
+                }
+                else {
+                    Ship ship = ships.get(shipNum);
+                    if (ship.getStopDay() != -1) continue;
+                    if ( day < stopDay) {
+                        stopDay = day;
+                        stopPort = port;
+                        stopShip = shipNum;
+                    }
+                    break;
+                }
+            }
+        }
+        //Debug.print("wb", "stopDay == " + stopDay + "; stopPort == " + stopPort + "; stopShip == " + stopShip);
+        if (stopPort == -1) return false;
+        Ship ship = ships.get(stopShip);
+        ship.setStopDay(stopDay);
+        ship.setStopPort(stopPort);
+        portsDaysShips.remove(stopPort);
+        return true;
+    }
+    
+    private void solve() {
+        HashMap<Integer, HashMap<Integer, Integer>> portsDaysShips = new HashMap<>();
+        for (int p = 0; p < numOfSheepsPorts; p++) {
+            HashMap<Integer, Integer> portDaysShips = new HashMap<>();
+            for (int s = 0; s < numOfSheepsPorts; s++) {
+                Ship ship = ships.get(s);
+                int day = ship.getPortDay(p);
+                portDaysShips.put(day, s);
+                //Debug.print("wb", "p == " + p + "; s == " + s + "; day == " + day);
+            }
+            portsDaysShips.put(p, portDaysShips);
+        }
+        //readPortsDaysShips(portsDaysShips);
+        for (int p = 0; p < numOfSheepsPorts; p++) {
+            if (!getStopDayShipPort(portsDaysShips)) {
+                return;
+            }
+        }
     }
     
     private void testSolution() {
@@ -232,31 +313,14 @@ public class Algoritm_1_6 {
                 for (int d = stopDay + 1; d < numOfDays; d++) {
                     for (int s = 0; s < numOfSheepsPorts; s++) {
                         Ship ship = ships.get(s);
-                        int port = ship.getPortAtDay(d);
-                        if (port == p) {
-                            Debug.print("rb", "Error: for port == " + p + "; ship == " + s + "; day == " + d);
+                        if (ship.getStopDay() > stopDay) {
+                            int port = ship.getPortAtDay(d);
+                            if (port == p) {
+                                Debug.print("rb", "Error: for port == " + p + "; ship == " + s + "; day == " + d);
+                            }
                         }
                     }
                 }
-            }
-        }
-    }
-    
-    private void solve() {
-        ArrayList<Integer> busyPorts = new ArrayList<>();
-        for (int d = 0; d < numOfDays; d++) {
-            int day = numOfDays - d - 1;
-            //Debug.print("rb", "day == " + day);
-            for (int s = 0; s < numOfSheepsPorts; s++) {
-                Ship ship = ships.get(s);
-                if (ship.getStopPort() != -1) continue;
-                int port = ship.getDaysPort()[day];
-                if (port == -1) continue;
-                if (busyPorts.indexOf(port) != -1) continue;
-                //Debug.print("wb", "set ship == " + s + "; stopPort == " + port);
-                ship.setStopPort(port);
-                ship.setStopDay(day);
-                busyPorts.add(port);
             }
         }
     }
