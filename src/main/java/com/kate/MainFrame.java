@@ -1,6 +1,7 @@
 package com.kate;
 
 import com.kate.algorithms.Algoritm_1_6;
+import com.kate.algorithms.Algoritm_1_7;
 import com.kate.debug.Debug;
 import com.kate.debug.DebugListener;
 import java.awt.Color;
@@ -10,8 +11,6 @@ import javax.swing.text.StyledDocument;
 
 public class MainFrame extends javax.swing.JFrame {
     
-    private Algoritm_1_6 algoritm_1_6;
-    
     void init(String release) {
         
         String releaseString = "Kate algoritms. Release: " + release;
@@ -19,13 +18,19 @@ public class MainFrame extends javax.swing.JFrame {
         
         Debug.setDebugListener(new DebugListener() {
             @Override
+            public void println(String flag, String str) {
+                printWithProperties(flag, str, true);
+            }
+
+            @Override
             public void print(String flag, String str) {
-                printWithProperties(flag, str);
+                printWithProperties(flag, str, false);
             }
         });
 
-        Debug.print("dbi", releaseString);
-        Debug.print("db", "===================================================================================================");
+        Debug.print("dbi", "Kate algoritms. Release: ");
+        Debug.println("bbi", release);
+        Debug.println("db", "===================================================================================================");
         
         jComboBox_Type_1_6.removeAllItems();
         jComboBox_Type_1_6.addItem("Kate's version of filling (with shift)");
@@ -52,27 +57,41 @@ public class MainFrame extends javax.swing.JFrame {
 
         jSplitPane = new javax.swing.JSplitPane();
         jTabbedPane = new javax.swing.JTabbedPane();
+        jPanel_Chapter_1 = new javax.swing.JPanel();
         jPanel_1_6 = new javax.swing.JPanel();
-        jLabel_Sheeps = new javax.swing.JLabel();
-        jLabel_Days = new javax.swing.JLabel();
-        jSpinner_Sheeps = new javax.swing.JSpinner();
-        jSpinner_Days = new javax.swing.JSpinner();
-        jButton_Solve_1_6 = new javax.swing.JButton();
-        jComboBox_Type_1_6 = new javax.swing.JComboBox<>();
         jLabel_Type_1_6 = new javax.swing.JLabel();
+        jComboBox_Type_1_6 = new javax.swing.JComboBox<>();
+        jLabel_Sheeps = new javax.swing.JLabel();
+        jSpinner_Sheeps = new javax.swing.JSpinner();
+        jLabel_Days = new javax.swing.JLabel();
+        jSpinner_Days = new javax.swing.JSpinner();
         jLabel_Shift = new javax.swing.JLabel();
         jSpinner_Shift = new javax.swing.JSpinner();
+        jButton_Solve_1_6 = new javax.swing.JButton();
+        jPanel_1_7 = new javax.swing.JPanel();
+        jLabel_NumOfWires = new javax.swing.JLabel();
+        jSpinner_NumOfWires = new javax.swing.JSpinner();
+        jButton_Solve_1_7 = new javax.swing.JButton();
         jScrollPane_Debug = new javax.swing.JScrollPane();
         jTextPane_Debug = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jSplitPane.setDividerLocation(200);
+        jSplitPane.setDividerLocation(190);
         jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jLabel_Sheeps.setText("Ships / ports:");
+        jPanel_1_6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Task #6"));
 
-        jLabel_Days.setText("Days:");
+        jLabel_Type_1_6.setText("Type of filling Main Schedule:");
+
+        jComboBox_Type_1_6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox_Type_1_6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox_Type_1_6ActionPerformed(evt);
+            }
+        });
+
+        jLabel_Sheeps.setText("Ships / ports:");
 
         jSpinner_Sheeps.setModel(new javax.swing.SpinnerNumberModel(6, 2, 98, 1));
         jSpinner_Sheeps.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -81,23 +100,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel_Days.setText("Days:");
+
         jSpinner_Days.setModel(new javax.swing.SpinnerNumberModel(7, 3, 99, 1));
         jSpinner_Days.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner_DaysStateChanged(evt);
             }
         });
-
-        jButton_Solve_1_6.setText("Solve (get Short Schedule)");
-        jButton_Solve_1_6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_Solve_1_6ActionPerformed(evt);
-            }
-        });
-
-        jComboBox_Type_1_6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel_Type_1_6.setText("Type of filling Main Schedule:");
 
         jLabel_Shift.setText("Shift:");
 
@@ -108,6 +118,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton_Solve_1_6.setText("Solve (get Short Schedule)");
+        jButton_Solve_1_6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_Solve_1_6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel_1_6Layout = new javax.swing.GroupLayout(jPanel_1_6);
         jPanel_1_6.setLayout(jPanel_1_6Layout);
         jPanel_1_6Layout.setHorizontalGroup(
@@ -115,47 +132,113 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel_1_6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel_1_6Layout.createSequentialGroup()
-                            .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel_Sheeps)
-                                .addComponent(jLabel_Days)
-                                .addComponent(jLabel_Shift))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jSpinner_Sheeps, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSpinner_Days, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSpinner_Shift, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(jButton_Solve_1_6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jComboBox_Type_1_6, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel_Type_1_6))
-                .addContainerGap(543, Short.MAX_VALUE))
+                    .addGroup(jPanel_1_6Layout.createSequentialGroup()
+                        .addComponent(jLabel_Days)
+                        .addGap(46, 46, 46)
+                        .addComponent(jSpinner_Days, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addComponent(jButton_Solve_1_6))
+                    .addGroup(jPanel_1_6Layout.createSequentialGroup()
+                        .addComponent(jLabel_Type_1_6)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel_1_6Layout.createSequentialGroup()
+                        .addComponent(jLabel_Sheeps)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSpinner_Sheeps, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel_Shift)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinner_Shift, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox_Type_1_6, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel_1_6Layout.setVerticalGroup(
             jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_1_6Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addContainerGap()
                 .addComponent(jLabel_Type_1_6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox_Type_1_6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel_Sheeps)
-                    .addComponent(jSpinner_Sheeps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel_Days)
-                    .addComponent(jSpinner_Days, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jSpinner_Sheeps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSpinner_Shift, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel_Shift))
-                .addGap(18, 18, 18)
-                .addComponent(jButton_Solve_1_6)
-                .addContainerGap())
+                .addGap(6, 6, 6)
+                .addGroup(jPanel_1_6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Days)
+                    .addComponent(jSpinner_Days, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_Solve_1_6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane.addTab("1-6", jPanel_1_6);
+        jPanel_1_7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Task #7"));
+
+        jLabel_NumOfWires.setText("Number of wires:");
+
+        jSpinner_NumOfWires.setModel(new javax.swing.SpinnerNumberModel(3, 2, 30, 1));
+        jSpinner_NumOfWires.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinner_NumOfWiresStateChanged(evt);
+            }
+        });
+
+        jButton_Solve_1_7.setText("Solve");
+        jButton_Solve_1_7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_Solve_1_7ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel_1_7Layout = new javax.swing.GroupLayout(jPanel_1_7);
+        jPanel_1_7.setLayout(jPanel_1_7Layout);
+        jPanel_1_7Layout.setHorizontalGroup(
+            jPanel_1_7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_1_7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_1_7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_1_7Layout.createSequentialGroup()
+                        .addComponent(jLabel_NumOfWires)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinner_NumOfWires, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton_Solve_1_7, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(197, Short.MAX_VALUE))
+        );
+        jPanel_1_7Layout.setVerticalGroup(
+            jPanel_1_7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_1_7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_1_7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jSpinner_NumOfWires, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel_NumOfWires))
+                .addGap(53, 53, 53)
+                .addComponent(jButton_Solve_1_7)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel_Chapter_1Layout = new javax.swing.GroupLayout(jPanel_Chapter_1);
+        jPanel_Chapter_1.setLayout(jPanel_Chapter_1Layout);
+        jPanel_Chapter_1Layout.setHorizontalGroup(
+            jPanel_Chapter_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Chapter_1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel_1_6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel_1_7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel_Chapter_1Layout.setVerticalGroup(
+            jPanel_Chapter_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Chapter_1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_Chapter_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel_1_6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel_1_7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane.addTab("Chapter #1", jPanel_Chapter_1);
 
         jSplitPane.setTopComponent(jTabbedPane);
 
@@ -184,9 +267,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton_Solve_1_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Solve_1_6ActionPerformed
         //Debug.print("w", "jComboBox_Type_1_6.getSelectedIndex() == " + jComboBox_Type_1_6.getSelectedIndex());
-        if (algoritm_1_6 == null) {
-            algoritm_1_6 = new Algoritm_1_6();
-        }
+        Algoritm_1_6 algoritm_1_6 = new Algoritm_1_6();
         algoritm_1_6.init((int) jSpinner_Sheeps.getValue(), (int) jSpinner_Days.getValue());
         algoritm_1_6.getSchedules(jComboBox_Type_1_6.getSelectedIndex(), (int) jSpinner_Shift.getValue());
     }//GEN-LAST:event_jButton_Solve_1_6ActionPerformed
@@ -215,17 +296,35 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jSpinner_ShiftStateChanged
 
+    private void jComboBox_Type_1_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_Type_1_6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox_Type_1_6ActionPerformed
+
+    private void jSpinner_NumOfWiresStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner_NumOfWiresStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jSpinner_NumOfWiresStateChanged
+
+    private void jButton_Solve_1_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Solve_1_7ActionPerformed
+        Algoritm_1_7 algoritm_1_7 = new Algoritm_1_7((int) jSpinner_NumOfWires.getValue());
+        //algoritm_1_6.getSchedules(jComboBox_Type_1_6.getSelectedIndex(), (int) jSpinner_Shift.getValue());
+    }//GEN-LAST:event_jButton_Solve_1_7ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Solve_1_6;
+    private javax.swing.JButton jButton_Solve_1_7;
     private javax.swing.JComboBox<String> jComboBox_Type_1_6;
     private javax.swing.JLabel jLabel_Days;
+    private javax.swing.JLabel jLabel_NumOfWires;
     private javax.swing.JLabel jLabel_Sheeps;
     private javax.swing.JLabel jLabel_Shift;
     private javax.swing.JLabel jLabel_Type_1_6;
     private javax.swing.JPanel jPanel_1_6;
+    private javax.swing.JPanel jPanel_1_7;
+    private javax.swing.JPanel jPanel_Chapter_1;
     private javax.swing.JScrollPane jScrollPane_Debug;
     private javax.swing.JSpinner jSpinner_Days;
+    private javax.swing.JSpinner jSpinner_NumOfWires;
     private javax.swing.JSpinner jSpinner_Sheeps;
     private javax.swing.JSpinner jSpinner_Shift;
     private javax.swing.JSplitPane jSplitPane;
@@ -233,7 +332,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane jTextPane_Debug;
     // End of variables declaration//GEN-END:variables
 
-    private void writeToDebugTextPane(String str, Color color, boolean italic, boolean bold) {
+    private void writeToDebugTextPane(String str, Color color, boolean italic, boolean bold, boolean println) {
         StyledDocument doc = jTextPane_Debug.getStyledDocument();
         SimpleAttributeSet sas = new SimpleAttributeSet();
         sas.addAttribute(javax.swing.text.StyleConstants.Foreground,    color);
@@ -241,14 +340,16 @@ public class MainFrame extends javax.swing.JFrame {
         sas.addAttribute(javax.swing.text.StyleConstants.Bold,          bold);
         try {
             doc.insertString(doc.getLength(), str, sas);
-            doc.insertString(doc.getLength(), "\n", sas);
+            if (println) {
+                doc.insertString(doc.getLength(), "\n", sas);
+            }
         } catch (BadLocationException ex) {
-            Debug.print("e", "Error: " + ex.getClass() + ":" + ex.getMessage());
+            Debug.println("e", "Error: " + ex.getClass() + ":" + ex.getMessage());
         }
         jTextPane_Debug.repaint();
     }
 
-    private void printWithProperties(String flag, String str) {
+    private void printWithProperties(String flag, String str, boolean println) {
         Color color     = Color.BLACK;
         boolean bold    = false;
         boolean italic  = false;
@@ -306,6 +407,6 @@ public class MainFrame extends javax.swing.JFrame {
                 break;
         }
         
-        writeToDebugTextPane(str, color, italic, bold);
+        writeToDebugTextPane(str, color, italic, bold, println);
     }
 }

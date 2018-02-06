@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Algoritm_1_6 {
+    Integer numOfDays;
+    Integer numOfSheepsPorts;
     
     private class Ship {
         int[] daysPort;
@@ -69,8 +71,6 @@ public class Algoritm_1_6 {
     -2  - stay in port
     >=0 - stay 
     */
-    Integer numOfDays;
-    Integer numOfSheepsPorts;
 
     public void printSchedules() {
         
@@ -98,20 +98,20 @@ public class Algoritm_1_6 {
             }
         }
         
-        Debug.print("bb", "Day-Ship Main Schedule:" + titleAddString + "Day-Ship Short Schedule:");
+        Debug.println("bb", "Day-Ship Main Schedule:" + titleAddString + "Day-Ship Short Schedule:");
 
         String str = "";
         for (int i = 0; i <= maxLength; i++) {
             str += "=";
         }
-        Debug.print("b", str + shiftString + str);
-        Debug.print("b", printString + shiftString + printString);
+        Debug.println("b", str + shiftString + str);
+        Debug.println("b", printString + shiftString + printString);
 
         printString = "";
         for (int i = 0; i <= maxLength; i++) {
             printString += "-";
         }
-        Debug.print("b", printString + shiftString + printString);
+        Debug.println("b", printString + shiftString + printString);
         
         for (int d = 0; d < numOfDays; d++) {
             
@@ -159,14 +159,14 @@ public class Algoritm_1_6 {
                 }
             }
             
-            Debug.print("b", printString);
+            Debug.println("b", printString);
         }
         
         printString = "";
         for (int i = 0; i <= maxLength; i++) {
             printString += "-";
         }
-        Debug.print("b", printString + shiftString + printString);
+        Debug.println("b", printString + shiftString + printString);
     }
     
     public void getSchedules(int type, int shift) {
@@ -217,7 +217,7 @@ public class Algoritm_1_6 {
                         }
                     }
                     if (day == -1) {
-                        Debug.print("rbi", "Error: not found free day for ship == " + s + "; port == " + port);
+                        Debug.println("rbi", "Error: not found free day for ship == " + s + "; port == " + port);
                     }
                     else {
                         busyDays.add(day);
@@ -235,11 +235,11 @@ public class Algoritm_1_6 {
     private void readPortsDaysShips(HashMap<Integer, HashMap<Integer, Integer>> portsDaysShips) {
         for (Map.Entry<Integer, HashMap<Integer, Integer>> entry : portsDaysShips.entrySet()) {
             int port = entry.getKey();
-            Debug.print("rb", "port == " + port);
+            Debug.println("rb", "port == " + port);
             HashMap<Integer, Integer> portDaysShips = entry.getValue();
             for (int d = 0; d < numOfDays; d++) {
                 Integer ship = portDaysShips.get(d);
-                Debug.print("wb", "day == " + d + "; ship == " + ship );
+                Debug.println("wb", "day == " + d + "; ship == " + ship );
             }
         }
     }
@@ -269,7 +269,7 @@ public class Algoritm_1_6 {
                 }
             }
         }
-        //Debug.print("wb", "stopDay == " + stopDay + "; stopPort == " + stopPort + "; stopShip == " + stopShip);
+        //Debug.println("wb", "stopDay == " + stopDay + "; stopPort == " + stopPort + "; stopShip == " + stopShip);
         if (stopPort == -1) return false;
         Ship ship = ships.get(stopShip);
         ship.setStopDay(stopDay);
@@ -286,7 +286,7 @@ public class Algoritm_1_6 {
                 Ship ship = ships.get(s);
                 int day = ship.getPortDay(p);
                 portDaysShips.put(day, s);
-                //Debug.print("wb", "p == " + p + "; s == " + s + "; day == " + day);
+                //Debug.println("wb", "p == " + p + "; s == " + s + "; day == " + day);
             }
             portsDaysShips.put(p, portDaysShips);
         }
@@ -307,7 +307,7 @@ public class Algoritm_1_6 {
                 stopDay = ship.getStopDay();
             }
             if (stopDay == -1) {
-                Debug.print("rb", "Error: for port == " + p + " stopDay not found");
+                Debug.println("rb", "Error: for port == " + p + " stopDay not found");
             }
             else {
                 for (int d = stopDay + 1; d < numOfDays; d++) {
@@ -316,7 +316,7 @@ public class Algoritm_1_6 {
                         if (ship.getStopDay() > stopDay) {
                             int port = ship.getPortAtDay(d);
                             if (port == p) {
-                                Debug.print("rb", "Error: for port == " + p + "; ship == " + s + "; day == " + d);
+                                Debug.println("rb", "Error: for port == " + p + "; ship == " + s + "; day == " + d);
                             }
                         }
                     }
