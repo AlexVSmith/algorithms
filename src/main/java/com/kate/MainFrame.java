@@ -177,7 +177,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel_NumOfWires.setText("Number of wires:");
 
-        jSpinner_NumOfWires.setModel(new javax.swing.SpinnerNumberModel(3, 2, 30, 1));
+        jSpinner_NumOfWires.setModel(new javax.swing.SpinnerNumberModel(5, 2, 30, 1));
         jSpinner_NumOfWires.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner_NumOfWiresStateChanged(evt);
@@ -306,6 +306,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton_Solve_1_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Solve_1_7ActionPerformed
         Algoritm_1_7 algoritm_1_7 = new Algoritm_1_7((int) jSpinner_NumOfWires.getValue());
+        algoritm_1_7.solve();
         //algoritm_1_6.getSchedules(jComboBox_Type_1_6.getSelectedIndex(), (int) jSpinner_Shift.getValue());
     }//GEN-LAST:event_jButton_Solve_1_7ActionPerformed
 

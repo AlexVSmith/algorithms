@@ -1,6 +1,5 @@
 package com.kate;
 
-import com.kate.debug.Debug;
 import java.util.ArrayList;
 
 public class Helper {

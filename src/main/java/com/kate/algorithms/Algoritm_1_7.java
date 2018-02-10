@@ -4,11 +4,13 @@ import com.kate.Helper;
 import com.kate.debug.Debug;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Algoritm_1_7 {
     private final int numOfWires;
     private final HashMap<Integer, HashMap<Integer, PointOfBlock>> inputWires; // wire, wireNum
     private final HashMap<Integer, HashMap<Integer, PointOfBlock>> rowsColumnsPoints; // row, column
+    private final HashMap<Integer, HashMap<Integer, PointOfBlock>> columnsRowsPoints; // row, column
 
     private class PointOfBlock {
         int wire;
@@ -54,6 +56,7 @@ public class Algoritm_1_7 {
     public void init() {
         inputWires.clear();
         rowsColumnsPoints.clear();
+        columnsRowsPoints.clear();
         int w, i;
         for (w = 0; w < numOfWires; w++) {
             //InputWire inputWire = new InputWire();
@@ -64,30 +67,37 @@ public class Algoritm_1_7 {
             for (i = 0; i < numOfWires; i++) {
 
                 int rowIndex = Helper.getRandomIndexFromList(freeRows);
-               int row = freeRows.get(rowIndex);
-
-               HashMap<Integer, PointOfBlock> rowColunmPoints = rowsColumnsPoints.get(row);
-               if (rowColunmPoints == null) {
-                   rowColunmPoints = new HashMap<>();
-               }
-               ArrayList<Integer> freePoints = getFreePointsOfRow(rowColunmPoints);
-               int columnIndex = Helper.getRandomIndexFromList(freePoints);
-               int column = freePoints.get(columnIndex);
-               
-               PointOfBlock pointOfBlock = new PointOfBlock(w, i, row, column);
-
-               rowColunmPoints.put(column, pointOfBlock);
-               rowsColumnsPoints.put(row, rowColunmPoints);
-
-               HashMap<Integer, PointOfBlock> wirePoints = inputWires.get(w);
-               if (wirePoints == null) {
-                   wirePoints = new HashMap<>();
-               }
-               wirePoints.put(i, pointOfBlock);
-               inputWires.put(w, wirePoints);
-               
-               freeRows.remove(rowIndex);
-               //Debug.println("wb", "w == " + w + "; i == " + i + "; r == " + row + "; c == " + column);
+                int row = freeRows.get(rowIndex);
+                
+                HashMap<Integer, PointOfBlock> rowColunmPoints = rowsColumnsPoints.get(row);
+                if (rowColunmPoints == null) {
+                    rowColunmPoints = new HashMap<>();
+                }
+                ArrayList<Integer> freePoints = getFreePointsOfRow(rowColunmPoints);
+                int columnIndex = Helper.getRandomIndexFromList(freePoints);
+                int column = freePoints.get(columnIndex);
+                
+                PointOfBlock pointOfBlock = new PointOfBlock(w, i, row, column);
+                
+                rowColunmPoints.put(column, pointOfBlock);
+                rowsColumnsPoints.put(row, rowColunmPoints);
+                
+                HashMap<Integer, PointOfBlock> columnRowsPoints = columnsRowsPoints.get(column);
+                if (columnRowsPoints == null) {
+                    columnRowsPoints = new HashMap<>();
+                }
+                columnRowsPoints.put(row, pointOfBlock);
+                columnsRowsPoints.put(column, columnRowsPoints);
+                
+                HashMap<Integer, PointOfBlock> wirePoints = inputWires.get(w);
+                if (wirePoints == null) {
+                    wirePoints = new HashMap<>();
+                }
+                wirePoints.put(i, pointOfBlock);
+                inputWires.put(w, wirePoints);
+                
+                freeRows.remove(rowIndex);
+                //Debug.println("wb", "w == " + w + "; i == " + i + "; r == " + row + "; c == " + column);
             }
         }
     }
@@ -96,6 +106,7 @@ public class Algoritm_1_7 {
         this.numOfWires = numOfWires;
         inputWires = new HashMap<>();
         rowsColumnsPoints = new HashMap<>();
+        columnsRowsPoints = new HashMap<>();
         init();
         printWires();
     }
@@ -199,6 +210,81 @@ public class Algoritm_1_7 {
                 Debug.print("xb", " |");
             }
             Debug.print("xb", "\n");
+        }
+        
+    }
+
+    public void solve() {
+        
+        HashMap<Integer, PointOfBlock> columnRowsPoints = columnsRowsPoints.get(0);
+        
+        HashMap<Integer, PointOfBlock> possiblePoints = new HashMap();
+        for (int r = 0; r < numOfWires; r++) {
+            PointOfBlock testPoint = columnRowsPoints.get(r);
+//            Debug.println("b", 
+//                    "testPoint; wire == " + testPoint.getWire() + 
+//                    "; wireNum == " + testPoint.getWireNum() + 
+//                    "; row == " + testPoint.getRow() + 
+//                    "; column == " + testPoint.getColumn());
+            PointOfBlock wirePoint = possiblePoints.get(testPoint.getWire());
+            if ( wirePoint != null) {
+//                Debug.println("r", 
+//                        "wirePoint; wire == " + wirePoint.getWire() + 
+//                        "; wireNum == " + wirePoint.getWireNum() + 
+//                        "; row == " + wirePoint.getRow() + 
+//                        "; column == " + wirePoint.getColumn());
+                if (testPoint.getWireNum() > wirePoint.getWireNum()) {
+//                    Debug.println("r", "continue;");
+                    continue;
+                }
+            }
+            possiblePoints.put(testPoint.getWire(), testPoint);
+        }
+
+        HashMap<Integer, PointOfBlock> finishedPoints   = new HashMap();
+        HashMap<Integer, PointOfBlock> testPoints       = new HashMap();
+        
+        ArrayList<Integer> restWires = new ArrayList();
+        ArrayList<Integer> restRows = new ArrayList();
+
+        for (int r = 0; r < numOfWires; r++) {
+            restWires.add(r);
+            restRows.add(r);
+        }
+
+        for ( Entry<Integer, PointOfBlock> entry : possiblePoints.entrySet() ) {
+            PointOfBlock possiblePoint = (PointOfBlock) entry.getValue();
+            
+            int indexOfRow = restRows.indexOf(possiblePoint.getRow());
+            if (indexOfRow != -1) {
+                restRows.remove(indexOfRow);
+            }
+            
+            int indexOfWire = restWires.indexOf(possiblePoint.getWire());
+            if (indexOfWire != -1) {
+                restWires.remove(indexOfWire);
+            }
+            //foundWire.add(possiblePoint.getWire());
+            //foundRow.add(possiblePoint.getRow());
+            Debug.println("d", 
+                    "possiblePoint; wire == " + possiblePoint.getWire() + 
+                    "; wireNum == " + possiblePoint.getWireNum() + 
+                    "; row == " + possiblePoint.getRow() + 
+                    "; column == " + possiblePoint.getColumn());
+            if (possiblePoint.getWireNum() == 0) {
+                finishedPoints.put(possiblePoint.getWire(), possiblePoint);
+            }
+            else {
+                testPoints.put(possiblePoint.getWire(), possiblePoint);
+            }
+        }
+        
+        for (int restRow : restRows) {
+            Debug.println("r", "restRow == " + restRow);
+            int columnNum = -1;
+            for (int restWire : restWires) {
+                Debug.println("r", "restWire == " + restWire);
+            }
         }
         
     }
